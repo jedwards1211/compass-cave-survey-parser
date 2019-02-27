@@ -54,37 +54,37 @@ function parseNumber(raw: Segment, messageIfInvalid: string): number {
   return parseFloat(raw.value)
 }
 
-const azimuthUnits: { [string]: DisplayAzimuthUnit } = {
+export const azimuthUnits: { [string]: DisplayAzimuthUnit } = {
   D: 'degrees',
   Q: 'quads',
   G: 'gradians',
 }
-const inclinationUnits: { [string]: DisplayInclinationUnit } = {
+export const inclinationUnits: { [string]: DisplayInclinationUnit } = {
   D: 'degrees',
   G: 'percentGrade',
   M: 'degreesAndMinutes',
   R: 'gradians',
   W: 'depthGauge',
 }
-const lengthUnits: { [string]: DisplayLengthUnit } = {
+export const lengthUnits: { [string]: DisplayLengthUnit } = {
   D: 'decimalFeet',
   I: 'feetAndInches',
   M: 'meters',
 }
-const lrudItems: { [string]: LrudItem } = {
+export const lrudItems: { [string]: LrudItem } = {
   L: 'left',
   R: 'right',
   U: 'up',
   D: 'down',
 }
-const shotMeasurementItems: { [string]: ShotMeasurementItem } = {
+export const shotMeasurementItems: { [string]: ShotMeasurementItem } = {
   L: 'length',
   A: 'frontsightAzimuth',
   D: 'frontsightInclination',
   a: 'backsightAzimuth',
   d: 'backsightInclination',
 }
-const stationSides: { [string]: StationSide } = {
+export const stationSides: { [string]: StationSide } = {
   F: 'from',
   T: 'to',
 }

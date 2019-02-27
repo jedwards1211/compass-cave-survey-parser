@@ -5,11 +5,130 @@
 
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import { Segment, SegmentParser } from 'parse-segment'
+import { Segment, SegmentParser, SegmentParseError } from 'parse-segment'
 import { Length, Angle } from 'unitized'
 import parseTripHeader from '../src/parseTripHeader'
 
 describe(`parseTripHeader`, function() {
+  it(`throws if SURVEY NAME: is missing`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY DATE: 7 10 79  COMMENT:Entrance Passage
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `expected SURVEY NAME: (SECRET.DAT, line 2, col 1)
+SURVEY DATE: 7 10 79  COMMENT:Entrance Passage
+^`
+    )
+  })
+  it(`throws if SURVEY DATE: is missing`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY TEAM:
+D.SMITH,R.BROWN,S.MURRAY
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `expected SURVEY DATE: (SECRET.DAT, line 3, col 1)
+SURVEY TEAM:
+^`
+    )
+  })
+  it(`throws if month is invalid`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY DATE: 1a 5 14
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `invalid month (SECRET.DAT, line 3, col 14)
+SURVEY DATE: 1a 5 14
+             ^^`
+    )
+  })
+  it(`throws if month is out of range`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY DATE: 13 5 14
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `month out of range (SECRET.DAT, line 3, col 14)
+SURVEY DATE: 13 5 14
+             ^^`
+    )
+  })
+  it(`throws if day is invalid`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY DATE: 11 5a 14
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `invalid day (SECRET.DAT, line 3, col 17)
+SURVEY DATE: 11 5a 14
+                ^^`
+    )
+  })
+  it(`throws if day is out of range`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY DATE: 11 0 14
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `day out of range (SECRET.DAT, line 3, col 17)
+SURVEY DATE: 11 0 14
+                ^`
+    )
+  })
+  it(`throws if year is invalid`, function() {
+    const parser = new SegmentParser(
+      new Segment({
+        value: `SECRET CAVE
+SURVEY NAME: A
+SURVEY DATE: 11 5 14a
+`,
+        source: 'SECRET.DAT',
+      })
+    )
+    expect(() => parseTripHeader(parser)).to.throw(
+      SegmentParseError,
+      `invalid year (SECRET.DAT, line 3, col 19)
+SURVEY DATE: 11 5 14a
+                  ^^^`
+    )
+  })
   it(`on correct trip header`, function() {
     const parser = new SegmentParser(
       new Segment({
@@ -45,7 +164,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTION
       ],
       hasBacksights: true,
       lrudAssociation: 'from',
-      lengthCorrection: Length.meters.of(4),
+      lengthCorrection: Length.feet.of(4),
       frontsightAzimuthCorrection: Angle.degrees.of(2),
       frontsightInclinationCorrection: Angle.degrees.of(3),
       backsightAzimuthCorrection: Angle.degrees.of(5),
@@ -88,7 +207,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTION
       ],
       hasBacksights: true,
       lrudAssociation: 'from',
-      lengthCorrection: Length.meters.of(4),
+      lengthCorrection: Length.feet.of(4),
       frontsightAzimuthCorrection: Angle.degrees.of(2),
       frontsightInclinationCorrection: Angle.degrees.of(3),
       backsightAzimuthCorrection: Angle.degrees.of(5),
@@ -131,7 +250,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00
       ],
       hasBacksights: true,
       lrudAssociation: 'from',
-      lengthCorrection: Length.meters.of(4),
+      lengthCorrection: Length.feet.of(4),
       frontsightAzimuthCorrection: Angle.degrees.of(2),
       frontsightInclinationCorrection: Angle.degrees.of(3),
     })
@@ -174,7 +293,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLadBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTI
       ],
       hasBacksights: true,
       lrudAssociation: 'from',
-      lengthCorrection: Length.meters.of(4),
+      lengthCorrection: Length.feet.of(4),
       frontsightAzimuthCorrection: Angle.degrees.of(2),
       frontsightInclinationCorrection: Angle.degrees.of(3),
       backsightAzimuthCorrection: Angle.degrees.of(5),
