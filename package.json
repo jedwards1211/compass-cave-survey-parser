@@ -1,7 +1,7 @@
 {
-  "name": "es2015-library-skeleton",
+  "name": "compass-cave-survey-parser",
   "version": "0.0.0-development",
-  "description": "my personal ES2015 library project skeleton",
+  "description": "parses compass cave survey data",
   "main": "index.js",
   "module": "es/index.js",
   "sideEffects": false,
@@ -65,17 +65,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jedwards1211/es2015-library-skeleton.git"
+    "url": "https://github.com/jedwards1211/compass-cave-survey-parser.git"
   },
   "keywords": [
-    "es2015"
+    ""
   ],
   "author": "Andy Edwards",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jedwards1211/es2015-library-skeleton/issues"
+    "url": "https://github.com/jedwards1211/compass-cave-survey-parser/issues"
   },
-  "homepage": "https://github.com/jedwards1211/es2015-library-skeleton#readme",
+  "homepage": "https://github.com/jedwards1211/compass-cave-survey-parser#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
@@ -109,7 +109,7 @@
     "husky": "^1.1.4",
     "istanbul": "^0.4.5",
     "lint-staged": "^8.0.4",
-    "mocha": "^6.0.0",
+    "mocha": "^5.0.0",
     "nyc": "^13.1.0",
     "prettier": "^1.15.2",
     "prettier-eslint": "^8.8.2",
@@ -117,7 +117,9 @@
     "semantic-release": "^15.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.5"
+    "@babel/runtime": "^7.1.5",
+    "parse-segment": "^1.2.0",
+    "unitized": "^1.0.0"
   },
   "renovate": {
     "extends": [
