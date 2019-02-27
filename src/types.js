@@ -20,7 +20,7 @@ export type ShotMeasurementItem =
   | 'backsightInclination'
 export type LrudItem = 'left' | 'right' | 'up' | 'down'
 
-export type TripHeader = {
+export type TripHeader = {|
   caveName: ?string,
   surveyName: ?string,
   date: Date,
@@ -41,4 +41,23 @@ export type TripHeader = {
   frontsightInclinationCorrection: UnitizedNumber<Angle>,
   backsightAzimuthCorrection?: UnitizedNumber<Angle>,
   backsightInclinationCorrection?: UnitizedNumber<Angle>,
-}
+|}
+
+export type Shot = {|
+  fromStationName: string,
+  toStationName: string,
+  length: UnitizedNumber<Length>,
+  frontsightAzimuth: ?UnitizedNumber<Angle>,
+  frontsightInclination: ?UnitizedNumber<Angle>,
+  backsightAzimuth: ?UnitizedNumber<Angle>,
+  backsightInclination: ?UnitizedNumber<Angle>,
+  left: ?UnitizedNumber<Length>,
+  right: ?UnitizedNumber<Length>,
+  up: ?UnitizedNumber<Length>,
+  down: ?UnitizedNumber<Length>,
+  comment?: string,
+  excludedFromLength?: boolean,
+  excludedFromPlotting?: boolean,
+  excludedFromAllProcessing?: boolean,
+  doNotAdjust?: boolean,
+|}

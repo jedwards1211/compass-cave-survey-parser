@@ -13,10 +13,7 @@ import {
   type ShotMeasurementItem,
   type StationSide,
 } from './types'
-
-const END_OF_LINE = /\r\n?|\n/gm
-const INLINE_WHITESPACE = /[ \t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/g
-const NONWHITESPACE = /\S+/
+import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from './regexes'
 
 function parseMonth(month: Segment): number {
   if (!/^\d+$/.test(month.value)) {
