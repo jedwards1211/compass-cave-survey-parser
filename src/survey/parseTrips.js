@@ -5,7 +5,7 @@
 import { SegmentParser } from 'parse-segment'
 import parseTripHeader from './parseTripHeader'
 import parseShots from './parseShots'
-import { WHITESPACE } from './regexes'
+import { WHITESPACE } from '../util/regexes'
 import Trip from './Trip'
 
 export default function* parseTrips(parser: SegmentParser): Iterable<Trip> {

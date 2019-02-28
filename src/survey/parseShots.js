@@ -3,7 +3,7 @@
  * @prettier
  */
 import { SegmentParser, Segment, SegmentParseError } from 'parse-segment'
-import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from './regexes'
+import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from '../util/regexes'
 
 import {
   Length,
