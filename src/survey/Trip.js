@@ -3,10 +3,10 @@
 import Shot from './Shot'
 import TripHeader from './TripHeader'
 
-export type TripProps = {
+export type TripProps = {|
   header: TripHeader,
   shots: Array<Shot>,
-}
+|}
 
 export default class Trip {
   header: TripHeader
