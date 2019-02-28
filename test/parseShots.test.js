@@ -6,13 +6,13 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import { Angle, Length } from 'unitized'
-import { type TripHeader } from '../src/types'
 import { Segment, SegmentParser } from 'parse-segment'
 import parseShots from '../src/parseShots'
+import TripHeader from '../src/TripHeader'
 
 describe(`parseShots`, function() {
   it(`works for basic shot`, function() {
-    const header: TripHeader = {
+    const header: TripHeader = new TripHeader({
       caveName: null,
       surveyName: null,
       date: new Date(),
@@ -35,7 +35,7 @@ describe(`parseShots`, function() {
       lengthCorrection: Length.feet.of(0),
       frontsightAzimuthCorrection: Angle.degrees.of(0),
       frontsightInclinationCorrection: Angle.degrees.of(0),
-    }
+    })
 
     expect(
       [
@@ -64,7 +64,7 @@ describe(`parseShots`, function() {
     })
   })
   it(`works for shot with backsights`, function() {
-    const header: TripHeader = {
+    const header: TripHeader = new TripHeader({
       caveName: null,
       surveyName: null,
       date: new Date(),
@@ -87,7 +87,7 @@ describe(`parseShots`, function() {
       lengthCorrection: Length.feet.of(0),
       frontsightAzimuthCorrection: Angle.degrees.of(0),
       frontsightInclinationCorrection: Angle.degrees.of(0),
-    }
+    })
 
     expect(
       [
@@ -118,7 +118,7 @@ describe(`parseShots`, function() {
     })
   })
   it(`parses shots until form feed`, function() {
-    const header: TripHeader = {
+    const header: TripHeader = new TripHeader({
       caveName: null,
       surveyName: null,
       date: new Date(),
@@ -141,7 +141,7 @@ describe(`parseShots`, function() {
       lengthCorrection: Length.feet.of(0),
       frontsightAzimuthCorrection: Angle.degrees.of(0),
       frontsightInclinationCorrection: Angle.degrees.of(0),
-    }
+    })
 
     expect([
       ...parseShots(

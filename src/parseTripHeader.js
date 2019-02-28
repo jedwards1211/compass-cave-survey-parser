@@ -4,16 +4,15 @@
  */
 import { SegmentParser, Segment, SegmentParseError } from 'parse-segment'
 import { Length, Angle } from 'unitized'
-import {
-  type TripHeader,
-  type DisplayAzimuthUnit,
-  type DisplayInclinationUnit,
-  type DisplayLengthUnit,
-  type LrudItem,
-  type ShotMeasurementItem,
-  type StationSide,
-} from './types'
 import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from './regexes'
+import TripHeader, {
+  azimuthUnits,
+  inclinationUnits,
+  lengthUnits,
+  lrudItems,
+  shotMeasurementItems,
+  stationSides,
+} from './TripHeader'
 
 function parseMonth(month: Segment): number {
   if (!/^\d+$/.test(month.value)) {
@@ -49,41 +48,6 @@ function parseNumber(raw: Segment, messageIfInvalid: string): number {
     throw new SegmentParseError(messageIfInvalid, raw)
   }
   return parseFloat(raw.value)
-}
-
-export const azimuthUnits: { [string]: DisplayAzimuthUnit } = {
-  D: 'degrees',
-  Q: 'quads',
-  G: 'gradians',
-}
-export const inclinationUnits: { [string]: DisplayInclinationUnit } = {
-  D: 'degrees',
-  G: 'percentGrade',
-  M: 'degreesAndMinutes',
-  R: 'gradians',
-  W: 'depthGauge',
-}
-export const lengthUnits: { [string]: DisplayLengthUnit } = {
-  D: 'decimalFeet',
-  I: 'feetAndInches',
-  M: 'meters',
-}
-export const lrudItems: { [string]: LrudItem } = {
-  L: 'left',
-  R: 'right',
-  U: 'up',
-  D: 'down',
-}
-export const shotMeasurementItems: { [string]: ShotMeasurementItem } = {
-  L: 'length',
-  A: 'frontsightAzimuth',
-  D: 'frontsightInclination',
-  a: 'backsightAzimuth',
-  d: 'backsightInclination',
-}
-export const stationSides: { [string]: StationSide } = {
-  F: 'from',
-  T: 'to',
 }
 
 function oneOf<V>(
@@ -193,7 +157,7 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
     )
   )
   parser.skip(INLINE_WHITESPACE)
-  const result: TripHeader = {
+  const result = new TripHeader({
     caveName,
     surveyName,
     date,
@@ -211,7 +175,7 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
     frontsightAzimuthCorrection,
     frontsightInclinationCorrection,
     lengthCorrection,
-  }
+  })
   if (lrudAssociation) result.lrudAssociation = lrudAssociation
   if (parser.skip(/CORRECTIONS2:/gi)) {
     parser.skip(INLINE_WHITESPACE)

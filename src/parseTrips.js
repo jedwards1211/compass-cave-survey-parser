@@ -3,10 +3,10 @@
  * @prettier
  */
 import { SegmentParser } from 'parse-segment'
-import { type Trip } from './types'
 import parseTripHeader from './parseTripHeader'
 import parseShots from './parseShots'
 import { WHITESPACE } from './regexes'
+import Trip from './Trip'
 
 export default function* parseTrips(parser: SegmentParser): Iterable<Trip> {
   while (
@@ -18,6 +18,6 @@ export default function* parseTrips(parser: SegmentParser): Iterable<Trip> {
     parser.skip(/FROM\s+TO[^\r\n]+/g)
     parser.skip(WHITESPACE)
     const shots = [...parseShots(parser, header)]
-    yield { header, shots }
+    yield new Trip({ header, shots })
   }
 }

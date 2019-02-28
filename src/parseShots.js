@@ -3,7 +3,6 @@
  * @prettier
  */
 import { SegmentParser, Segment, SegmentParseError } from 'parse-segment'
-import { type Shot, type TripHeader } from './types'
 import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from './regexes'
 
 import {
@@ -13,6 +12,9 @@ import {
   type Unit,
   Angle,
 } from 'unitized'
+
+import Shot from './Shot'
+import TripHeader from './TripHeader'
 
 function parseNumber<T: UnitType>(
   raw: Segment,
@@ -109,7 +111,7 @@ export default function* parseShots(
       )
       parser.skip(INLINE_WHITESPACE)
     }
-    const shot: Shot = {
+    const shot = new Shot({
       fromStationName,
       toStationName,
       length,
@@ -121,7 +123,7 @@ export default function* parseShots(
       up,
       down,
       right,
-    }
+    })
     if (parser.skip(/#\|/g)) {
       let char
       while (((char = parser.currentChar()), parser.index++, char !== '#')) {

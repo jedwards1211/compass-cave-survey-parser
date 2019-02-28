@@ -7,12 +7,12 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 
 import { Angle, Length } from 'unitized'
-import formatTripHeader from '../src/formatTripHeader'
+import TripHeader from '../src/TripHeader'
 
-describe(`formatTripHeader`, function() {
+describe(`TripHeader.toString()`, function() {
   it(`works`, function() {
     expect(
-      formatTripHeader({
+      new TripHeader({
         caveName: 'SECRET CAVE',
         surveyName: 'A',
         date: new Date('1979/7/10'),
@@ -39,7 +39,7 @@ describe(`formatTripHeader`, function() {
         frontsightInclinationCorrection: Angle.degrees.of(3),
         backsightAzimuthCorrection: Angle.degrees.of(5),
         backsightInclinationCorrection: Angle.degrees.of(6),
-      })
+      }).toString()
     ).to.equal(`SECRET CAVE
 SURVEY NAME: A
 SURVEY DATE: 7 10 1979  COMMENT:Entrance Passage
