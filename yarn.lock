@@ -1654,6 +1654,11 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
+chai-subset@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/chai-subset/-/chai-subset-1.6.0.tgz#a5d0ca14e329a79596ed70058b6646bd6988cfe9"
+  integrity sha1-pdDKFOMpp5WW7XAFi2ZGvWmIz+k=
+
 chai@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.2.0.tgz#760aa72cf20e3795e84b12877ce0e83737aa29e5"
@@ -5965,10 +5970,10 @@ parse-passwd@^1.0.0:
   resolved "https://registry.yarnpkg.com/parse-passwd/-/parse-passwd-1.0.0.tgz#6d5b934a456993b23d37f40a382d6f1666a8e5c6"
   integrity sha1-bVuTSkVpk7I9N/QKOC1vFmao5cY=
 
-parse-segment@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/parse-segment/-/parse-segment-1.3.0.tgz#7e4fa44ab785fd02067ad47f01e1a39d1e2388c6"
-  integrity sha512-DFJwLAThN2+3Ln4QMdXHk9m/S1U3C9askzBDK2CqtridYoSyBCINPhMMEGgfLfj4CDFNN0jzsHM25TYwE8CaHw==
+parse-segment@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/parse-segment/-/parse-segment-1.4.0.tgz#c39af83b4329d4498dea45d1fa5623884d7774f1"
+  integrity sha512-cqwbzyzIDDclvND0v3hbBdUHVBW9dO602RxmZqR2BpZbwuUHvLXz6NAgP5Vni6UwuVz/njRCSgCOq4ykl/qvBA==
   dependencies:
     "@babel/runtime" "^7.1.5"
     es6-error "^4.1.1"
@@ -7633,10 +7638,10 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
-unitized@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/unitized/-/unitized-1.0.0.tgz#a92f41ec9d349d8e8641d8e385b1c61c9b383cc7"
-  integrity sha512-fdJAvCiVah7EdW6YM8oADn6Vumm6GtG0Fn3FAOelrAUob0CENOUAkscapUSAuE+cllQvXoWib7IfWXnadohKTQ==
+unitized@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/unitized/-/unitized-1.0.1.tgz#e05f9829aaaed8a85a17f78ebbc226de79a2bc86"
+  integrity sha512-1Fp0tkFCb2saToa5UBFG1GHYWKXW2bE9gwYvYDd+OcBuX6Oz2gcPgipxFPvsba53jdOdjzSSPhG5yYeGKjhpCg==
   dependencies:
     "@babel/runtime" "^7.1.5"
 

@@ -4,7 +4,7 @@
  */
 import { SegmentParser, Segment, SegmentParseError } from 'parse-segment'
 import { type Shot, type TripHeader } from './types'
-import { END_OF_LINE, INLINE_WHITESPACE } from './regexes'
+import { END_OF_LINE, INLINE_WHITESPACE, NONWHITESPACE } from './regexes'
 
 import {
   Length,
@@ -26,7 +26,10 @@ function parseNumber<T: UnitType>(
   return value <= -999 ? null : unit.of(value)
 }
 
-function parseLrud(raw: Segment, messageIfInvalid: string): ?UnitizedNumber<T> {
+function parseLrud(
+  raw: Segment,
+  messageIfInvalid: string
+): ?UnitizedNumber<Length> {
   if (!/^[-+]?(\d+(\.\d*)?|\.\d+)$/.test(raw.value)) {
     throw new SegmentParseError(messageIfInvalid, raw)
   }
@@ -34,17 +37,13 @@ function parseLrud(raw: Segment, messageIfInvalid: string): ?UnitizedNumber<T> {
   return value < 0 ? null : Length.feet.of(value)
 }
 
-function isEndOfLine(parser: SegmentParser): boolean {
-  return /[\r\n]/.test(parser.segment.charAt(parser.index).value)
-}
-
 export default function* parseShots(
   parser: SegmentParser,
   header: TripHeader
 ): Iterable<Shot> {
-  while (parser.index < parser.segment.length && !parser.skip(/\f/g)) {
+  while (!parser.isAtEnd() && !parser.skip(/\f/g)) {
     parser.skip(INLINE_WHITESPACE)
-    if (isEndOfLine(parser)) {
+    if (parser.isAtEndOfLine()) {
       parser.nextDelimited(END_OF_LINE)
       continue
     }
@@ -88,9 +87,10 @@ export default function* parseShots(
       'invalid down'
     )
     const right = parseLrud(
-      parser.nextDelimited(INLINE_WHITESPACE),
+      parser.match(NONWHITESPACE, 'missing right').segment,
       'invalid right'
     )
+    parser.skip(INLINE_WHITESPACE)
     let backsightAzimuth = null
     let backsightInclination = null
     if (header.hasBacksights) {
@@ -103,10 +103,11 @@ export default function* parseShots(
         'invalid azimuth'
       )
       backsightInclination = parseNumber(
-        parser.nextDelimited(INLINE_WHITESPACE),
+        parser.match(NONWHITESPACE, 'missing backsight inclination').segment,
         Angle.degrees,
         'invalid inclination'
       )
+      parser.skip(INLINE_WHITESPACE)
     }
     const shot: Shot = {
       fromStationName,
@@ -123,9 +124,7 @@ export default function* parseShots(
     }
     if (parser.skip(/#\|/g)) {
       let char
-      while (
-        ((char = parser.segment.charAt(parser.index++).value), char !== '#')
-      ) {
+      while (((char = parser.currentChar()), parser.index++, char !== '#')) {
         switch (char) {
           case 'L':
             shot.excludedFromLength = true

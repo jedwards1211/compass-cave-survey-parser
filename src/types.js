@@ -25,8 +25,8 @@ export type TripHeader = {|
   surveyName: ?string,
   date: Date,
   comment: ?string,
-  surveyors: ?Array<string>,
-  rawSurveyors: string,
+  surveyors: Array<string>,
+  rawSurveyors?: string,
   declination: UnitizedNumber<Angle>,
   displayAzimuthUnit: DisplayAzimuthUnit,
   displayLengthUnit: DisplayLengthUnit,
@@ -60,4 +60,9 @@ export type Shot = {|
   excludedFromPlotting?: boolean,
   excludedFromAllProcessing?: boolean,
   doNotAdjust?: boolean,
+|}
+
+export type Trip = {|
+  header: TripHeader,
+  shots: Array<Shot>,
 |}

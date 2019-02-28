@@ -96,6 +96,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-istanbul": "^5.1.0",
     "chai": "^4.2.0",
+    "chai-subset": "^1.6.0",
     "codecov": "^3.1.0",
     "copy": "^0.3.2",
     "cross-env": "^5.2.0",
@@ -118,8 +119,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "parse-segment": "^1.2.0",
-    "unitized": "^1.0.0"
+    "parse-segment": "^1.4.0",
+    "unitized": "^1.0.1"
   },
   "renovate": {
     "extends": [
