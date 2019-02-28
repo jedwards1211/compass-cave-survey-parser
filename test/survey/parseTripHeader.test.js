@@ -7,8 +7,8 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import { Segment, SegmentParser, SegmentParseError } from 'parse-segment'
 import { Length, Angle } from 'unitized'
-import parseTripHeader from '../src/parseTripHeader'
-import TripHeader from '../src/TripHeader'
+import parseTripHeader from '../../src/survey/parseTripHeader'
+import TripHeader from '../../src/survey/TripHeader'
 
 describe(`parseTripHeader`, function() {
   it(`throws if SURVEY NAME: is missing`, function() {

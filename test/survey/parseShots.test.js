@@ -7,8 +7,8 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import { Angle, Length } from 'unitized'
 import { Segment, SegmentParser } from 'parse-segment'
-import parseShots from '../src/parseShots'
-import TripHeader from '../src/TripHeader'
+import parseShots from '../../src/survey/parseShots'
+import TripHeader from '../../src/survey/TripHeader'
 
 describe(`parseShots`, function() {
   it(`works for basic shot`, function() {

@@ -8,7 +8,7 @@ import { expect } from 'chai'
 import fs from 'fs'
 import path from 'path'
 import { Segment, SegmentParser } from 'parse-segment'
-import parseTrips from '../src/parseTrips'
+import parseTrips from '../../src/survey/parseTrips'
 import { Angle, Length } from 'unitized'
 
 describe(`parseTrips`, function() {

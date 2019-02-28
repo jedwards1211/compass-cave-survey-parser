@@ -6,7 +6,7 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
 import { Angle, Length } from 'unitized'
-import Shot from '../src/Shot'
+import Shot from '../../src/survey/Shot'
 
 describe(`Shot.toString()`, function() {
   it(`works`, function() {

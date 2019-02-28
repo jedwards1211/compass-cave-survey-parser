@@ -7,7 +7,7 @@ import { describe, it } from 'mocha'
 import { expect } from 'chai'
 
 import { Angle, Length } from 'unitized'
-import TripHeader from '../src/TripHeader'
+import TripHeader from '../../src/survey/TripHeader'
 
 describe(`TripHeader.toString()`, function() {
   it(`works`, function() {
