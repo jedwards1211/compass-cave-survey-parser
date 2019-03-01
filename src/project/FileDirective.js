@@ -1,15 +1,14 @@
 // @flow
 import CompassProjectDirective from './CompassProjectDirective'
-
 import { type LinkStation } from './LInkStation'
-
 import { type NEVLocation } from './NEVLocation'
-
 import { Length } from 'unitized'
+import Trip from '../survey/Trip'
 
 export default class FileDirective extends CompassProjectDirective {
   +file: string
   +linkStations: Array<LinkStation>
+  data: ?Array<Trip>
 
   constructor(file: string, linkStations?: ?Array<LinkStation>) {
     super()

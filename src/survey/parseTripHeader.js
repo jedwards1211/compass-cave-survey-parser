@@ -66,12 +66,12 @@ function oneOf<V>(
 }
 
 export default function parseTripHeader(parser: SegmentParser): TripHeader {
-  const caveName = parser.nextDelimited(END_OF_LINE).trim().value
-  parser.skip(INLINE_WHITESPACE)
+  const caveName = parser.nextDelimited(END_OF_LINE).trim().value || null
+
   parser.expectIgnoreCase('SURVEY NAME:')
   parser.skip(INLINE_WHITESPACE)
-  const surveyName = parser.nextDelimited(END_OF_LINE).trim().value
-  parser.skip(INLINE_WHITESPACE)
+  const surveyName = parser.nextDelimited(END_OF_LINE).trim().value || null
+
   parser.expectIgnoreCase('SURVEY DATE:')
   parser.skip(INLINE_WHITESPACE)
   const month = parseMonth(
@@ -80,9 +80,11 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
   const day = parseDay(parser.nextDelimited(INLINE_WHITESPACE, 'missing day'))
   const year = parseYear(parser.match(NONWHITESPACE, 'missing year').segment)
   const date = new Date(year, month - 1, day)
-  const hasComment = parser.skip(/\s+COMMENT:/gi)
-  const restOfLine = parser.nextDelimited(END_OF_LINE).trim().value
-  const comment = hasComment ? restOfLine : null
+
+  const hasComment = parser.skip(/\s+COMMENT:\s*/giy)
+  const commentSegment = parser.nextDelimited(END_OF_LINE)
+  const comment = hasComment ? commentSegment.value.trim() || null : null
+
   parser.expectIgnoreCase('SURVEY TEAM:')
   parser.nextDelimited(END_OF_LINE)
   const rawSurveyors = parser.nextDelimited(END_OF_LINE).value.trim()
@@ -92,71 +94,88 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
       : rawSurveyors
           .split(rawSurveyors.includes(';') ? /\s*;\s*/ : /\s*,\s*/)
           .filter(Boolean)
+
   parser.expectIgnoreCase('DECLINATION:')
   parser.skip(INLINE_WHITESPACE)
   const declination = Angle.degrees.of(
     parseNumber(
-      parser.nextDelimited(INLINE_WHITESPACE, 'missing declination'),
+      parser.match(NONWHITESPACE, 'missing declination').segment,
       'invalid declination'
     )
   )
-  parser.expectIgnoreCase('FORMAT:')
-  parser.skip(INLINE_WHITESPACE)
-  const formatIndex = parser.index
-  const format = parser.nextDelimited(INLINE_WHITESPACE)
-  parser.index = formatIndex
-  const displayAzimuthUnit = oneOf(parser, azimuthUnits, 'azimuth unit')
-  const displayLengthUnit = oneOf(parser, lengthUnits, 'length unit')
-  const displayLrudUnit = oneOf(parser, lengthUnits, 'lrud unit')
-  const displayInclinationUnit = oneOf(
-    parser,
-    inclinationUnits,
-    'inclination unit'
-  )
-  const lrudOrder = [
-    oneOf(parser, lrudItems, 'lrud item'),
-    oneOf(parser, lrudItems, 'lrud item'),
-    oneOf(parser, lrudItems, 'lrud item'),
-    oneOf(parser, lrudItems, 'lrud item'),
+
+  let displayAzimuthUnit = 'degrees'
+  let displayLengthUnit = 'decimalFeet'
+  let displayLrudUnit = 'decimalFeet'
+  let displayInclinationUnit = 'degrees'
+  let lrudOrder = ['left', 'up', 'down', 'right']
+  let shotMeasurementOrder = [
+    'length',
+    'frontsightAzimuth',
+    'frontsightInclination',
   ]
-  const shotMeasurementOrder = [
-    oneOf(parser, shotMeasurementItems, 'shot measurement item'),
-    oneOf(parser, shotMeasurementItems, 'shot measurement item'),
-    oneOf(parser, shotMeasurementItems, 'shot measurement item'),
-  ]
-  if (format.length >= 15) {
-    shotMeasurementOrder.push(
+  let hasBacksights = false
+  let lrudAssociation = null
+
+  if (parser.skip(/\s+FORMAT:\s*/giy)) {
+    const formatIndex = parser.index
+    const format = parser.match(NONWHITESPACE, 'missing format').segment
+    parser.index = formatIndex
+    displayAzimuthUnit = oneOf(parser, azimuthUnits, 'azimuth unit')
+    displayLengthUnit = oneOf(parser, lengthUnits, 'length unit')
+    displayLrudUnit = oneOf(parser, lengthUnits, 'lrud unit')
+    displayInclinationUnit = oneOf(parser, inclinationUnits, 'inclination unit')
+    lrudOrder = [
+      oneOf(parser, lrudItems, 'lrud item'),
+      oneOf(parser, lrudItems, 'lrud item'),
+      oneOf(parser, lrudItems, 'lrud item'),
+      oneOf(parser, lrudItems, 'lrud item'),
+    ]
+    shotMeasurementOrder = [
       oneOf(parser, shotMeasurementItems, 'shot measurement item'),
-      oneOf(parser, shotMeasurementItems, 'shot measurement item')
+      oneOf(parser, shotMeasurementItems, 'shot measurement item'),
+      oneOf(parser, shotMeasurementItems, 'shot measurement item'),
+    ]
+    if (format.length >= 15) {
+      shotMeasurementOrder.push(
+        oneOf(parser, shotMeasurementItems, 'shot measurement item'),
+        oneOf(parser, shotMeasurementItems, 'shot measurement item')
+      )
+    }
+    hasBacksights =
+      format.length > 11 && parser.segment.charAt(parser.index++).value === 'B'
+    lrudAssociation =
+      format.length > 12
+        ? oneOf(parser, stationSides, 'lrud association')
+        : null
+  }
+
+  let frontsightAzimuthCorrection = Angle.degrees.of(0)
+  let frontsightInclinationCorrection = Angle.degrees.of(0)
+  let lengthCorrection = Length.feet.of(0)
+  if (parser.skip(/\s+CORRECTIONS:\s*/gimy)) {
+    frontsightAzimuthCorrection = Angle.degrees.of(
+      parseNumber(
+        parser.nextDelimited(
+          INLINE_WHITESPACE,
+          'missing inclination correction'
+        ),
+        'invalid azimuth correction'
+      )
+    )
+    frontsightInclinationCorrection = Angle.degrees.of(
+      parseNumber(
+        parser.nextDelimited(INLINE_WHITESPACE, 'missing length correction'),
+        'invalid inclination correction'
+      )
+    )
+    lengthCorrection = Length.feet.of(
+      parseNumber(
+        parser.match(NONWHITESPACE, 'missing length correction').segment,
+        'invalid length correction'
+      )
     )
   }
-  const hasBacksights =
-    format.length > 11 && parser.segment.charAt(parser.index++).value === 'B'
-  const lrudAssociation =
-    format.length > 12 ? oneOf(parser, stationSides, 'lrud association') : null
-
-  parser.skip(INLINE_WHITESPACE)
-  parser.expectIgnoreCase('CORRECTIONS:')
-  parser.skip(INLINE_WHITESPACE)
-  const frontsightAzimuthCorrection = Angle.degrees.of(
-    parseNumber(
-      parser.nextDelimited(INLINE_WHITESPACE, 'missing inclination correction'),
-      'invalid azimuth correction'
-    )
-  )
-  const frontsightInclinationCorrection = Angle.degrees.of(
-    parseNumber(
-      parser.nextDelimited(INLINE_WHITESPACE, 'missing length correction'),
-      'invalid inclination correction'
-    )
-  )
-  const lengthCorrection = Length.feet.of(
-    parseNumber(
-      parser.match(NONWHITESPACE, 'missing length correction').segment,
-      'invalid length correction'
-    )
-  )
-  parser.skip(INLINE_WHITESPACE)
   const result = new TripHeader({
     caveName,
     surveyName,
@@ -177,8 +196,7 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
     lengthCorrection,
   })
   if (lrudAssociation) result.lrudAssociation = lrudAssociation
-  if (parser.skip(/CORRECTIONS2:/gi)) {
-    parser.skip(INLINE_WHITESPACE)
+  if (parser.skip(/\s+CORRECTIONS2:\s*/giy)) {
     result.backsightAzimuthCorrection = Angle.degrees.of(
       parseNumber(
         parser.nextDelimited(
@@ -196,7 +214,6 @@ export default function parseTripHeader(parser: SegmentParser): TripHeader {
       )
     )
   }
-  parser.nextDelimited(END_OF_LINE)
 
   return result
 }

@@ -119,6 +119,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
+    "fs-extra": "^7.0.1",
     "parse-segment": "^1.4.0",
     "unitized": "^1.0.1"
   },

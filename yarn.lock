@@ -3162,7 +3162,7 @@ fs-exists-sync@^0.1.0:
   resolved "https://registry.yarnpkg.com/fs-exists-sync/-/fs-exists-sync-0.1.0.tgz#982d6893af918e72d08dec9e8673ff2b5a8d6add"
   integrity sha1-mC1ok6+RjnLQjeyehnP/K1qNat0=
 
-fs-extra@^7.0.0:
+fs-extra@^7.0.0, fs-extra@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
   integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
@@ -5971,9 +5971,9 @@ parse-passwd@^1.0.0:
   integrity sha1-bVuTSkVpk7I9N/QKOC1vFmao5cY=
 
 parse-segment@^1.4.0:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/parse-segment/-/parse-segment-1.4.2.tgz#4d412bf33300096a7385619cf8d18483c6b9221e"
-  integrity sha512-82rDIKG7ykuXeyPWxan7BbXMLfD9M+G0LE4lxO8Wz0Vt3V4vYnB1ycKOdqQ08tJQRF8T/555jb0yg6L0QyWE1A==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/parse-segment/-/parse-segment-1.4.3.tgz#c877b2f5ad9efe3d8bc7ace1f4eda781fff855ab"
+  integrity sha512-yDK6a3HX/1h0A82FSqE4+N81beADnTdhl6BfiqevEwuYTPLJJo6Rw4slRbTBAJDF2BoLk1CjL2ZA9pBO/P593w==
   dependencies:
     "@babel/runtime" "^7.1.5"
     es6-error "^4.1.1"

@@ -78,4 +78,34 @@ describe(`parseTrips`, function() {
       ],
     })
   })
+  it(`works when cave name is blank`, function() {
+    const data = `Fulford Cave
+SURVEY NAME: A
+SURVEY DATE: 6 29 1987  COMMENT:Entrance Passage
+SURVEY TEAM:
+ , , , ,
+DECLINATION:   11.18  FORMAT: DDDDUDLRLADN  CORRECTIONS:  0.00 0.00 0.00
+
+        FROM           TO   LENGTH  BEARING      INC     LEFT       UP     DOWN    RIGHT   FLAGS  COMMENTS
+
+          A1           A2    21.75    63.50   -28.00     2.60     2.60     2.60     2.60
+\f
+
+SURVEY NAME: A+
+SURVEY DATE: 6 20 1987  COMMENT:Big Meander Area
+SURVEY TEAM:
+Steve Reames,Stan Allison, , ,
+DECLINATION:   11.18  FORMAT: DDDDUDLRLADN  CORRECTIONS:  0.00 0.00 0.00
+
+        FROM           TO   LENGTH  BEARING      INC     LEFT       UP     DOWN    RIGHT   FLAGS  COMMENTS
+
+         A13          A14    18.20     8.50     6.00     6.90     6.00     2.00     4.00
+`
+    const parser = new SegmentParser(
+      new Segment({ value: data, source: 'Fulford.dat' })
+    )
+    const trips = [...parseTrips(parser)]
+    expect(trips[0].header.caveName).to.equal('Fulford Cave')
+    expect(trips[1].header.caveName).to.be.null
+  })
 })
